@@ -7,7 +7,7 @@ export default function MainLayout() {
     <Router> 
       <Routes> 
         <Route path="/auth" element={<AuthPage />} /> 
-        <Route path="/" element={<Home />} /> 
+        <Route path="/" element={<Home />} />    
       </Routes> 
     </Router> 
   ); 

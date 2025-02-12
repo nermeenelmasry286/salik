@@ -1,15 +1,6 @@
 import styled from "styled-components";
 import { OutlinedInput, InputLabel, Button } from '@mui/material';
 
-// Styled Input
-export const StyledOutlinedInput = styled(OutlinedInput)`
-  
-`;
-
-export const StyledInputLabel = styled(InputLabel)`
-
-`;
-
 export const SubmitButton = styled(Button)`
   background-color: #FFB800;
   color: black;

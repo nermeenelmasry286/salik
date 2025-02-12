@@ -1,23 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { registerUser } from '../../api/requests';
+import { registerUser, loginUserApi } from '../../services/authService';
 
-export const signUpUser = createAsyncThunk('auth/signUpUser', async (userData, { rejectWithValue }) => {
-  try {
-    const response = await registerUser(userData);
+ const signUpUser = createAsyncThunk('auth/signUp', async (userData) => {
+  return await registerUser(userData);
+});
 
-
-    // console.log('API Response:', response);
-
-
-    if (!response.id) {
-      console.error('Response does not contain an ID:', response);
-      throw new Error(response.message || 'No error message provided');
-    }
-    return response;
-  } catch (error) {
-    console.error('Error in signUpUser thunk:', error);
-    return rejectWithValue(error.message || 'No error message provided');
-  }
+const loginUser = createAsyncThunk('auth/login', async (userData) => {
+  return await loginUserApi(userData);
 });
 
 const authSlice = createSlice({
@@ -28,22 +17,28 @@ const authSlice = createSlice({
     builder
       .addCase(signUpUser.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(signUpUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
-        state.error = null;
       })
       .addCase(signUpUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
-
-       
-        console.log('Error in Redux State:', action.payload);
+        state.error = action.error.message;
+      })
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });
 
 export default authSlice.reducer;
-
+export { signUpUser, loginUser };

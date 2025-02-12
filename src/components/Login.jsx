@@ -1,21 +1,14 @@
 import React, { useState } from 'react';
-import { FormControl, Box, FormHelperText } from '@mui/material';
-import { validateForm, validateField } from '../validation/validation';
+import { FormControl, InputLabel, Box, FormHelperText } from '@mui/material';
+import { validateLoginForm } from '../validation/validation';
 import { useDispatch, useSelector } from 'react-redux';
-import { signUpUser } from '../redux/slices/authSlices';
+import { loginUser } from '../redux/slices/authSlices';
 import { useNavigate } from 'react-router-dom';
-import { StyledOutlinedInput, StyledInputLabel, SubmitButton } from '../custom/StyledInput';
-import styles from '../styles/signUpStyles.module.css';
+import { StyledOutlinedInput, SubmitButton } from '../custom/StyledInput';
+import styles from '../styles/loginStyles.module.css';
 
-export default function SignUp() {
-  const [formData, setFormData] = useState({
-    userName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    nationalId: '',
-  });
-
+export default function Login() {
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.auth);
@@ -24,26 +17,16 @@ export default function SignUp() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-
-    const error = validateField(name, value, formData);
-    setErrors({ ...errors, [name]: error });
+    setErrors(validateLoginForm({ ...formData, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const validationErrors = {};
-    Object.keys(formData).forEach((field) => {
-      const error = validateField(field, formData[field], formData);
-      if (error) {
-        validationErrors[field] = error;
-      }
-    });
-
+    const validationErrors = validateLoginForm(formData);
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
-      const { confirmPassword, ...dataToSubmit } = formData;
-      dispatch(signUpUser(dataToSubmit)).then((result) => {
+      dispatch(loginUser(formData)).then((result) => {
         if (result.meta.requestStatus === 'fulfilled') {
           navigate('/');
         }
@@ -54,9 +37,9 @@ export default function SignUp() {
   return (
     <form onSubmit={handleSubmit} noValidate autoComplete="off">
       <Box className={styles.formBox}>
-        {['userName', 'email', 'password', 'confirmPassword', 'nationalId'].map((field) => (
+        {['email', 'password'].map((field) => (
           <FormControl key={field} error={!!errors[field]}>
-            <StyledInputLabel htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}</StyledInputLabel>
+            <InputLabel htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}</InputLabel>
             <StyledOutlinedInput
               id={field}
               name={field}
@@ -66,21 +49,17 @@ export default function SignUp() {
               placeholder={`Enter your ${field}`}
               label={field.charAt(0).toUpperCase() + field.slice(1)}
             />
-            {errors[field] && (
-              <FormHelperText>{errors[field]}</FormHelperText>
-            )}
+            {errors[field] && <FormHelperText>{errors[field]}</FormHelperText>}
           </FormControl>
         ))}
-
         {error && <FormHelperText error>{error}</FormHelperText>}
-
         <SubmitButton
           type="submit"
           variant="contained"
           disabled={loading}
           style={{ backgroundColor: '#FFB800', color: 'black' }}
         >
-          {loading ? 'Signing Up...' : 'Sign Up'}
+          {loading ? 'Logging In...' : 'Log In'}
         </SubmitButton>
       </Box>
     </form>
