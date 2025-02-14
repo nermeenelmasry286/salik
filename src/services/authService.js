@@ -1,12 +1,10 @@
 import axios from 'axios';
 
-const API_URL = 'https://67a98e496e9548e44fc3f738.mockapi.io/api/salik/users';
+const BASE_URL = 'http://localhost:5000/api/';
 
 export async function registerUser(userData) {
   try {
-    const response = await axios.post(API_URL, userData, {
-      headers: { 'Content-Type': 'application/json' },
-    });
+    const response = await axios.post(`${BASE_URL}auth/signup`, userData);
     return response.data;
   } catch (error) {
     console.error('Error registering user:', error);
@@ -16,9 +14,11 @@ export async function registerUser(userData) {
 
 export async function loginUserApi(userData) {
   try {
-    const response = await axios.post(`${API_URL}/login`, userData, {
+    const response = await axios.post(`${BASE_URL}auth/login`, userData, {
       headers: { 'Content-Type': 'application/json' },
     });
+    localStorage.setItem('token', response.data.token);
+    
     return response.data;
   } catch (error) {
     console.error('Error logging in user:', error);

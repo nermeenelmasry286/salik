@@ -35,11 +35,11 @@ export const validateField = (name, value, formData) => {
         error = 'User Name must be at least 3 characters long';
       }
       break;
-    case 'email':
+    case 'phone':
       if (!value.trim()) {
-        error = 'Email is required';
-      } else if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(value)) {
-        error = 'Invalid email format';
+        error = 'phone is required';
+      } else if (!/^[0-9]{11}$/.test(value)) {
+        error = 'Invalid phone number';
       }
       break;
     case 'password':

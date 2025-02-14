@@ -8,8 +8,8 @@ export default function MainLayout() {
   return (
     <Router>
       <Routes>
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/" element={<Home />} />
+        {/* <Route path="/auth" element={<AuthPage />} /> */}
+        <Route path="/" element={<AuthPage />} />
         <Route path="/addTrip" element={<AddTrip />} />
       </Routes>
     </Router>

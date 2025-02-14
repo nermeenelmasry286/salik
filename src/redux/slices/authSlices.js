@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { registerUser, loginUserApi } from '../../services/authService';
 
- const signUpUser = createAsyncThunk('auth/signUp', async (userData) => {
+ const signUpUser = createAsyncThunk('auth/signUpUser', async (userData) => {
   return await registerUser(userData);
 });
 
-const loginUser = createAsyncThunk('auth/login', async (userData) => {
+const loginUser = createAsyncThunk('auth/loginUser', async (userData) => {
   return await loginUserApi(userData);
 });
 

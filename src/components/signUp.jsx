@@ -9,8 +9,8 @@ import styles from '../styles/signUpStyles.module.css';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
-    userName: '',
-    email: '',
+    fullName: '',
+    phone: '',
     password: '',
     confirmPassword: '',
     nationalId: '',
@@ -29,7 +29,7 @@ export default function SignUp() {
     setErrors({ ...errors, [name]: error });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
     const validationErrors = {};
     Object.keys(formData).forEach((field) => {
@@ -43,18 +43,15 @@ export default function SignUp() {
 
     if (Object.keys(validationErrors).length === 0) {
       const { confirmPassword, ...dataToSubmit } = formData;
-      dispatch(signUpUser(dataToSubmit)).then((result) => {
-        if (result.meta.requestStatus === 'fulfilled') {
-          navigate('/');
-        }
-      });
+      await dispatch(signUpUser(dataToSubmit))
+      navigate('/');
     }
   };
 
   return (
     <form onSubmit={handleSubmit} noValidate autoComplete="off">
       <Box className={styles.formBox}>
-        {['userName', 'email', 'password', 'confirmPassword', 'nationalId'].map((field) => (
+        {['fullName', 'phone', 'password', 'confirmPassword', 'nationalId'].map((field) => (
           <FormControl key={field} error={!!errors[field]}>
             <StyledInputLabel htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}</StyledInputLabel>
             <StyledOutlinedInput

@@ -8,7 +8,7 @@ import { StyledOutlinedInput, SubmitButton } from '../custom/StyledInput';
 import styles from '../styles/loginStyles.module.css';
 
 export default function Login() {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ phone: '', password: '' });
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.auth);
@@ -20,24 +20,21 @@ export default function Login() {
     setErrors(validateLoginForm({ ...formData, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
     const validationErrors = validateLoginForm(formData);
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
-      dispatch(loginUser(formData)).then((result) => {
-        if (result.meta.requestStatus === 'fulfilled') {
-          navigate('/');
-        }
-      });
+     await dispatch(loginUser(formData))
+     navigate('/addTrip');
     }
   };
 
   return (
     <form onSubmit={handleSubmit} noValidate autoComplete="off">
       <Box className={styles.formBox}>
-        {['email', 'password'].map((field) => (
+        {['phone', 'password'].map((field) => (
           <FormControl key={field} error={!!errors[field]}>
             <InputLabel htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}</InputLabel>
             <StyledOutlinedInput
